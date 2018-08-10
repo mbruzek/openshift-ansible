@@ -29,16 +29,12 @@
       HEKETI_FSTAB: "{{ glusterfs_heketi_fstab }}"
       CLUSTER_NAME: "{{ glusterfs_name }}"
 
-- name: Set heketi Deployed fact
-  set_fact:
-    glusterfs_heketi_deploy_is_missing: False
-
 - debug:
-    var: glusterfs_heketi_is_native
+    msg: "glusterfs_heketi_is_native: {{ glusterfs_heketi_is_native }}"
 - debug:
-    var: glusterfs_heketi_deploy_is_missing
+    msg: "glusterfs_heketi_deploy_is_missing: {{ glusterfs_heketi_deploy_is_missing }}"
 - debug:
-    var: glusterfs_heketi_is_missing
+    msg: "glusterfs_heketi_is_missing: {{ glusterfs_heketi_is_missing }}"
 
 - name: Wait for deploy-heketi pod
   oc_obj:
@@ -53,7 +49,7 @@
   - "deploy_heketi_pod.results.results[0]['items'] | lib_utils_oo_collect(attribute='status.conditions') | lib_utils_oo_collect(attribute='status', filters={'type': 'Ready'}) | map('bool') | select | list | count == 1"
   delay: 10
   retries: "{{ (glusterfs_timeout | int / 10) | int }}"
-  when:
-  - glusterfs_heketi_is_native
-  - not glusterfs_heketi_deploy_is_missing
-  - glusterfs_heketi_is_missing
+
+- name: Set heketi Deployed fact
+  set_fact:
+    glusterfs_heketi_deploy_is_missing: False
