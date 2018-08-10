@@ -33,6 +33,13 @@
   set_fact:
     glusterfs_heketi_deploy_is_missing: False
 
+- debug:
+    var: glusterfs_heketi_is_native
+- debug:
+    var: glusterfs_heketi_deploy_is_missing
+- debug:
+    var: glusterfs_heketi_is_missing
+
 - name: Wait for deploy-heketi pod
   oc_obj:
     namespace: "{{ glusterfs_namespace }}"
