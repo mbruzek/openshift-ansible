@@ -1,4 +1,11 @@
 ---
+- debug:
+    var: glusterfs_count
+  when: gluster_count is defined
+
+- debug:
+    var: glusterfs_nodes
+
 - name: Wait for GlusterFS pods
   oc_obj:
     namespace: "{{ glusterfs_namespace }}"
