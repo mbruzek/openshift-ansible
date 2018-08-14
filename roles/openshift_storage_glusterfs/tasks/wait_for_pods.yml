@@ -35,4 +35,4 @@
 
 - name: Print the pods in ready state.
   debug:
-    var: "glusterfs_pods_wait.results.results[0]['items'] | lib_utils_oo_collect(attribute='status.conditions') | lib_utils_oo_collect(attribute='status', filters={'type': 'Ready'})"
+    var: "{{ glusterfs_pods_wait.results.results[0]['items'] | lib_utils_oo_collect(attribute='status.conditions') | lib_utils_oo_collect(attribute='status', filters={'type': 'Ready'}) }}"
