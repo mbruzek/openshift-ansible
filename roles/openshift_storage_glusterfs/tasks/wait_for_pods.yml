@@ -1,9 +1,11 @@
 ---
-- debug:
+- name: Print glusterfs_count
+  debug:
     var: glusterfs_count
   when: gluster_count is defined
 
-- debug:
+- name: Print glusterfs_nodes
+  debug:
     var: glusterfs_nodes
 
 - name: Wait for GlusterFS pods
@@ -19,5 +21,18 @@
   - "glusterfs_pods_wait.results.results[0]['items'] | lib_utils_oo_collect(attribute='status.conditions') | lib_utils_oo_collect(attribute='status', filters={'type': 'Ready'}) | map('bool') | select | list | count == l_glusterfs_count"
   delay: 10
   retries: "{{ (glusterfs_timeout | int / 10) | int }}"
+  failed_when: False
   vars:
     l_glusterfs_count: "{{ glusterfs_count | default(glusterfs_nodes | count) | int }}"
+
+- name: Print the results.results[0]['items']
+  debug:
+    var: glusterfs_pods_wait.results.results[0]['items']
+
+- name: Print the status conditions
+  debug:
+    var: glusterfs_pods_wait.results.results[0]['items'] | lib_utils_oo_collect(attribute='status.conditions')
+
+- name: Print the pods in ready state.
+  debug:
+    var: "glusterfs_pods_wait.results.results[0]['items'] | lib_utils_oo_collect(attribute='status.conditions') | lib_utils_oo_collect(attribute='status', filters={'type': 'Ready'})"
